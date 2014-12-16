@@ -11,17 +11,16 @@ class shopRees46Plugin extends shopPlugin
     * @desc Встраиваем JS код REES46 в <HEAD> магазина        
     */  
     public function frontendHead()
-    {      
-        $plugin_id = array('shop', 'rees46');
-
-        $sett = new waAppSettingsModel();
-        $status = $sett->get($plugin_id, 'is_enabled');
+    {              
+        $status = $this->getSettings('is_enabled');
 
         if (!$status) {return;} // если скрипт в настройках выключен -> выходим
 
         $view = wa()->getView();
+        
+        $rees46_shop_id = $this->getSettings('shop_id');
+        var_dump($rees46_shop_id);
 
-        $rees46_shop_id = $sett->get($plugin_id, 'shop_id');
         $view->assign('rees46_shop_id', $rees46_shop_id);        
 
         $content = $view->fetch($this->path.'/templates/frontendHead.html');
@@ -92,15 +91,15 @@ class shopRees46Plugin extends shopPlugin
     public function orderActionCreate($order)
     {     
 
-      $orderItemsModel = new shopOrderItemsModel();
-      $items = $orderItemsModel->getItems($order['order_id']); // получаем список товаров заказа
+        $orderItemsModel = new shopOrderItemsModel();
+        $items = $orderItemsModel->getItems($order['order_id']); // получаем список товаров заказа
 
-      foreach ($items as $value) {
+        foreach ($items as $value) {
         $rees46_items[] = array('item_id' => $value["product_id"], 'amount' => intval($value["quantity"]));
-      }
+        }
 
-      $cookie_data = json_encode(array("items" => $rees46_items, "order_id" => $order['order_id']));
-      setcookie('rees46_track_purchase', $cookie_data, 0, '/'); // save data to cookies, JS will track data from cookies            
+        $cookie_data = json_encode(array("items" => $rees46_items, "order_id" => $order['order_id']));
+        setcookie('rees46_track_purchase', $cookie_data, 0, '/'); // save data to cookies, JS will track data from cookies            
 
     }
 

@@ -32,8 +32,8 @@ function setREES46() {
           var shopUrl= "{$wa->getUrl('/frontend')}";
           {literal}
 
-          $.getJSON(baseUrl + '?plugin=rees46&action=products&product_ids=' + ids.join(','), function(data) {
-            var products = data.products;
+          $.getJSON(shopUrl + '?module=ajax&action=rees46&product_ids=' + ids.join(','), function(response) {
+            var products = response.data;
 
             var productsBlock = '';
 
@@ -224,11 +224,6 @@ function setREES46() {
             };
 
             if (remove == true && item_id != null) {
-
-              {/literal}
-              var baseUrl = "{$wa->getUrl('/frontend/rees46/')}";              
-              {literal}
-
 
               REES46.addReadyListener(function() {
                 params = {item_id: item_id}
