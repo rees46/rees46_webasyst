@@ -30,6 +30,8 @@ function setREES46() {
           {/literal}
           var baseUrl = "{$wa->getUrl('/frontend/rees46/')}";
           var shopUrl= "{$wa->getUrl('/frontend')}";
+          var currency = "{$currency}";
+          var default_image = "{$wa_app_static_url}img/image-dummy.png";
           {literal}
 
           $.getJSON(shopUrl + '?module=ajax&action=rees46&product_ids=' + ids.join(','), function(response) {
@@ -38,6 +40,23 @@ function setREES46() {
             var productsBlock = '';
 
             $(products).each(function() {
+
+              var print_price = '';
+
+              switch (currency) {
+                case 'USD':
+                  print_price = '$' + this.price;
+                  break;
+                case 'EUR':
+                  print_price = '€' + this.price;
+                  break;
+                default: // RUB
+                  print_price = this.price + ' р.';
+                  break;
+              } 
+
+              if (this.image_url == '')
+                this.image_url = default_image;
 
               if (this.name != '' && this.name != null) {
                 var recommend_url = shopUrl + this.url + recommenderType;
@@ -49,7 +68,7 @@ function setREES46() {
                                             '<a href="' + recommend_url + '">' + this.name + '</a>' +
                                           '</div>' +
                                           '<div class="recommended-item-price">' +
-                                            this.price + ' ' + REES46.currency +
+                                            print_price +
                                           '</div>' +
                                           '<div class="recommended-item-action">' +
                                             '<a href="' + recommend_url + '">Подробнее</a>'+

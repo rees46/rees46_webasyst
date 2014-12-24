@@ -18,10 +18,11 @@ class shopRees46Plugin extends shopPlugin
 
         $view = wa()->getView();
         
-        $rees46_shop_id = $this->getSettings('shop_id');
-        var_dump($rees46_shop_id);
+        $rees46_shop_id = $this->getSettings('shop_id'); 
+        $view->assign('rees46_shop_id', $rees46_shop_id);  
 
-        $view->assign('rees46_shop_id', $rees46_shop_id);        
+        $currency = wa()->getSetting('currency', 'RUB', 'shop');
+        $view->assign('currency', $currency);                
 
         $content = $view->fetch($this->path.'/templates/frontendHead.html');
         return $content;
