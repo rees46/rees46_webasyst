@@ -59,7 +59,7 @@ function setREES46() {
                 this.image_url = default_image;
 
               if (this.name != '' && this.name != null) {
-                var recommend_url = shopUrl + this.url + recommenderType;
+                var recommend_url = this.url + recommenderType;
                 recomend_products_tpl += '<div class="recommended-item">' +
                                           '<div class="recommended-item-photo">' +
                                             '<a href="' + recommend_url + '"><img src="' + this.image_url + '" class="item_img" /></a>' +

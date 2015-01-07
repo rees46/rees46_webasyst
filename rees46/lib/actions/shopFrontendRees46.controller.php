@@ -12,13 +12,16 @@ class shopFrontendRees46Controller extends waJsonController
     {        
         // список ID товаров
         $product_ids = waRequest::get('product_ids');
+        $intval_ids = array();
+        foreach (explode(",", $product_ids) as $id) {
+            $intval_ids[] = intval($id);
+        }
+
+        $collection = new shopProductsCollection('id/' . implode(',', $intval_ids));
+        $coll_products = $collection->getProducts();
 
         $products = array();
-        $productModel = new shopProductModel();
-
-        foreach (explode(",", $product_ids) as $product_id) {
-            $id = intval($product_id);
-            $product = $productModel->getById($id);            
+        foreach ($coll_products as $product) {          
 
             if ($product != null && $product['count'] !== '0'){
                 $image_url = '';
@@ -29,7 +32,7 @@ class shopFrontendRees46Controller extends waJsonController
                 $p = Array(
                     'id' => $product["id"],
                     'name' => $product["name"],
-                    'url' =>  $product["url"] . '/?recommended_by=',
+                    'url' =>  $product["frontend_url"] . '?recommended_by=',
                     'price' => (float)($product['price']),
                     'image_url' => $image_url
                 );
