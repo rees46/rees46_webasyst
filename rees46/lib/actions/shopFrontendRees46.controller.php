@@ -21,6 +21,8 @@ class shopFrontendRees46Controller extends waJsonController
         $coll_products = $collection->getProducts();
 
         $products = array();
+        $currency = wa()->getConfig()->getCurrency();
+
         foreach ($coll_products as $product) {          
 
             if ($product != null && $product['count'] !== '0'){
@@ -34,6 +36,7 @@ class shopFrontendRees46Controller extends waJsonController
                     'name' => $product["name"],
                     'url' =>  $product["frontend_url"] . '?recommended_by=',
                     'price' => (float)($product['price']),
+                    'print_price' => wa_currency($product["price"], $currency),
                     'image_url' => $image_url
                 );
                 array_push($products, $p);

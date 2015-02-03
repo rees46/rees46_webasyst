@@ -41,19 +41,7 @@ function setREES46() {
 
             $(products).each(function() {
 
-              var print_price = '';
-
-              switch (currency) {
-                case 'USD':
-                  print_price = '$' + this.price;
-                  break;
-                case 'EUR':
-                  print_price = '€' + this.price;
-                  break;
-                default: // RUB
-                  print_price = this.price + ' р.';
-                  break;
-              } 
+              var print_price = this.print_price;
 
               if (this.image_url == '')
                 this.image_url = default_image;
