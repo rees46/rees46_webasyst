@@ -20,6 +20,7 @@ while ($customer = $customers->fetch_row()) {
 	}
 	if($result->num_rows > 0) {
 		$row = $result->fetch_row();
-		echo $customer[0] . ',' . $row[2] . PHP_EOL;
+		$email = strtolower(preg_replace('/[^a-zA-Z0-9@\._-]/i', '', $row[2]));
+		echo $customer[0] . ',' . $email . PHP_EOL;
 	}
 }
