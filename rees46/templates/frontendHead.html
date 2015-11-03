@@ -11,17 +11,25 @@ function setREES46() {
       var recommenderType = recommenderBlock.data('type');
       var recommenderTitle = recommenderBlock.data('title');
       var recommenderLimit = recommenderBlock.data('limit');
+      var recommenderBatch = recommenderBlock.data('batch');
       if (recommenderLimit == null || recommenderLimit == undefined)
-        recommenderLimit = 5;
+        recommenderLimit = 10;
 
       var recomend_products_tpl = ''
+
+      if (recommenderType && recommenderBatch=={$is_batch}) {
     {literal}
-      if (recommenderType) {
         REES46.recommend({
           recommender_type: recommenderType,
           category: document.currentCategoryId,
           item: document.currentProductId,
-          cart: document.currentCart
+          cart: document.currentCart,
+          limit: recommenderLimit,
+    {/literal}
+          {if $modification}
+            modification: '{$modification}'
+          {/if}
+    {literal}
         }, function(ids) {
           if (ids.length == 0) {
             return;
@@ -105,6 +113,7 @@ function setREES46() {
           REES46.init('{$rees46_shop_id}', null);
         {/if}
 
+
         {* =============== Product view =================== *}        
                 
 
@@ -130,6 +139,9 @@ function setREES46() {
             document.is_available = false;
           {/if}
           document.currentProductPrice = '{$product.price}';
+          document.currentProductName = '{$product.name|escape}';
+          document.currentProductUrl = '{$wa->domainUrl()}{$wa->shop->productUrl($product)}';
+          document.currentProductImage = '{$wa->domainUrl()}{$wa->shop->productImgUrl($product, '970')}';
         {/if}        
 
         {* =============== Items in cart =================== *}
@@ -153,9 +165,9 @@ function setREES46() {
             price: document.currentProductPrice,
             is_available: document.is_available,
             categories: document.categories_ids,
-            name: '{$product.name|escape}',
-            url: '{$wa->shop->productUrl($product)}',
-            image_url: '{$wa->shop->productImgUrl($product, '970')}'
+            url: document.currentProductUrl,
+            image_url: document.currentProductImage,
+            name: document.currentProductName
           {rdelim});
 
         {/if}
@@ -178,6 +190,9 @@ function setREES46() {
             var price = null;
             var categories = null;
             var is_available = null;
+            var name = null;
+            var item_url = null;
+            var image_url = null;
 
             $.each(arr_data, function(idx, param) {
               if (param.indexOf("cart") == 0) {
@@ -196,7 +211,7 @@ function setREES46() {
             $.each(arr_data, function(idx, param) {
               if (add == true && param.indexOf("product_id") == 0) {
                 var arr_param = param.split('=');
-                item_id = arr_param[1];                
+                item_id = arr_param[1];
               }
               if (remove == true && param.indexOf("id") == 0) {
                 var arr_param = param.split('=');
@@ -206,7 +221,7 @@ function setREES46() {
                   {foreach $wa->shop->cart->items() as $item}
                     if ({$item.id} == cart_id) item_id = {$item.product_id};
                   {/foreach}
-                {literal}           
+                {literal}
               }
             });
 
@@ -215,16 +230,21 @@ function setREES46() {
               price  = document.currentProductPrice;
               categories = [document.currentCategoryId];
               is_available = document.is_available;
+              item_url = document.currentProductUrl;
+              image_url = document.currentProductImage;
+              name = document.currentProductName;
             }
 
             if (cart == true && add == true && item_id != null) {
+
               REES46.addReadyListener(function() {
                 params = {item_id: item_id}
                 // addition params if available
                 if (price != null) params['price'] = price;
                 if (categories != null) params['categories'] = [categories];
                 if (is_available != null) params['is_available'] = is_available;
-
+                if (name != null) params['name'] = name;
+                if (item_url != null) params['url'] = item_url;
 
                 REES46.pushData('cart', params);
               });
@@ -243,11 +263,11 @@ function setREES46() {
               });
             };
           };
-        }); //end add to cart
+        }); // end add to cart
 
         setREES46();
         
-
+      
 
       }); // end addReadyListener
 
