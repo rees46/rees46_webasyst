@@ -19,7 +19,7 @@ class shopRees46Plugin extends shopPlugin
         $view = wa()->getView();
 
         $is_batch = $this->getSettings('is_batch');
-        $view->assign('is_batch', $is_batch);  
+        $view->assign('is_batch', $is_batch);
 
         $modification = $this->getSettings('modification');
         $view->assign('modification', $modification);  
@@ -28,11 +28,26 @@ class shopRees46Plugin extends shopPlugin
         $view->assign('rees46_shop_id', $rees46_shop_id);  
 
         $currency = wa()->getSetting('currency', 'RUB', 'shop');
-        $view->assign('currency', $currency);                
+        $view->assign('currency', $currency);
+
+        $rees46_query = waRequest::get('query');
+        $rees46_query = htmlspecialchars($rees46_query);
+	$view->assign('rees46_query', $rees46_query);
 
         $content = $view->fetch($this->path.'/templates/frontendHead.html');
         return $content;
     }
+
+    /**
+    * @desc Пакетная расстановка блоков: встраиваем блоки на страницу поиска
+    */ 
+
+    public function frontendSearch()
+    {
+        $html = '<div class="rees46 rees46-recommend" data-type="search" data-batch="1" style="margin-top: 20px;"></div>';
+        return $html;    
+    }
+
 
     /**
     * @desc Пакетная расстановка блоков: встраиваем блок на страницу с корзиной
@@ -122,6 +137,12 @@ class shopRees46Plugin extends shopPlugin
                 $type = $recommender_type;
                 break;
             case 'see_also':
+                $type = $recommender_type;
+                break;
+            case 'buying_now':
+                $type = $recommender_type;
+                break;
+            case 'search':
                 $type = $recommender_type;
                 break;
             default:

@@ -16,20 +16,20 @@ function setREES46() {
         recommenderLimit = 10;
 
       var recomend_products_tpl = ''
-
       if (recommenderType && recommenderBatch=={$is_batch}) {
     {literal}
         REES46.recommend({
+    {/literal}
+          {if !empty($rees46_query)}search_query: '{$rees46_query}',{/if}
+          {if $modification}
+            modification: '{$modification}',
+          {/if}
+    {literal}
           recommender_type: recommenderType,
           category: document.currentCategoryId,
           item: document.currentProductId,
           cart: document.currentCart,
           limit: recommenderLimit,
-    {/literal}
-          {if $modification}
-            modification: '{$modification}'
-          {/if}
-    {literal}
         }, function(ids) {
           if (ids.length == 0) {
             return;
@@ -79,7 +79,9 @@ function setREES46() {
                 similar: 'Похожие товары',
                 popular: 'Популярные товары',
                 see_also: 'Посмотрите также',
-                recently_viewed: 'Вы недавно смотрели'
+                recently_viewed: 'Вы недавно смотрели',
+		buying_now: 'Cейчас покупают',
+		search: 'Искавшие это также купили'
             };
 
             if (recommenderTitle == null || recommenderTitle == undefined)
@@ -266,8 +268,6 @@ function setREES46() {
         }); // end add to cart
 
         setREES46();
-        
-      
 
       }); // end addReadyListener
 

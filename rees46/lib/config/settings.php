@@ -39,28 +39,36 @@ return array(
                 'title' => 'Без модификаций',
             ),
             array(
-                'value' => fashion,
-                'title' => 'Одежда, обувь, аксессуары',
+                'value' => 'appliances',
+                'title' => 'Бытовая техника',
             ),
             array(
-                'value' => child,
+                'value' => 'child',
                 'title' => 'Детские товары',
             ),
             array(
-                'value' => cosmetic,
+                'value' => 'cosmetic',
                 'title' => 'Косметика',
             ),
             array(
-                'value' => fmcg,
-                'title' => 'FMCG/CPG',
+                'value' => 'coupon',
+                'title' => 'Купоны, акции и скидки',
             ),
             array(
-                'value' => animal,
+                'value' => 'fashion',
+                'title' => 'Одежда, обувь, аксессуары',
+            ),
+            array(
+                'value' => 'construction',
+                'title' => 'Строительные материалы',
+            ),
+            array(
+                'value' => 'animal',
                 'title' => 'Товары для животных',
             ),
             array(
-                'value' => coupon,
-                'title' => 'Купоны, акции и скидки',
+                'value' => 'fmcg',
+                'title' => 'FMCG/CPG',
             ),
         ),
         'value' => null,
@@ -82,3 +90,4 @@ return array(
         'value' => 0,
     )
 );
+
