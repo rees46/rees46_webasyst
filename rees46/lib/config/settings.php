@@ -30,8 +30,8 @@ return array(
         'value' => 1,
     ),
     'modification' => array(
-        'title' => 'Модификация алгоритма рекомендаций для тарифа "Отраслевой"',
-        'description' => '<a href="http://rees46.com/ecommerce#prices" target="_blank">Узнать подробнее о тарифе "Отраслевой"</a>',
+        'title' => 'Модификация алгоритма рекомендаций"',
+        'description' => '<a href="http://rees46.com/" target="_blank">Узнать подробнее про отраслевые модификации</a>',
         'control_type' => waHtmlControl::SELECT,
         'options' => array(
             array(
@@ -44,7 +44,7 @@ return array(
             ),
             array(
                 'value' => 'child',
-                'title' => 'Детские товары',
+                'title' => 'Товары для детей',
             ),
             array(
                 'value' => 'cosmetic',
@@ -56,7 +56,7 @@ return array(
             ),
             array(
                 'value' => 'fashion',
-                'title' => 'Одежда, обувь, аксессуары',
+                'title' => 'Одежда и обувь',
             ),
             array(
                 'value' => 'construction',
@@ -68,7 +68,7 @@ return array(
             ),
             array(
                 'value' => 'fmcg',
-                'title' => 'FMCG/CPG',
+                'title' => 'Товары повседневного спроса',
             ),
         ),
         'value' => null,

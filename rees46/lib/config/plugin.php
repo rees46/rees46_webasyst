@@ -1,10 +1,10 @@
 <?php
 
 return array(
-    'name' => 'REES46: рекомендательная система',
-    'description' => 'Система товарных рекомендаций для повышения продаж в интернет-магазине',
+    'name' => 'REES46: центр управления конверсией',
+    'description' => 'REES46 — сервис, предоставляющий все многообразие инструментов для электронной торговли без сложной интеграции',
     'img'=>'img/rees46.png',
-    'version' => '2.0.1',
+    'version' => '3.0.1',
     'vendor' => 1009320,
     'frontend'    => true,
     'icons'=>array(
@@ -15,7 +15,7 @@ return array(
         'frontend_homepage' => 'frontendHomepage',
         'frontend_category' => 'frontendCategory',
         'frontend_cart' => 'frontendCart',
-        'order_action.create' => 'orderActionCreate',
-	'frontend_search' => 'frontendSearch'
+        'frontend_checkout' => 'orderActionCreate',
+        'frontend_search' => 'frontendSearch'
     ),
 );

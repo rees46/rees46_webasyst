@@ -23,8 +23,7 @@ class shopFrontendRees46Controller extends waJsonController
         $products = array();
         $currency = wa()->getConfig()->getCurrency();
 
-        foreach ($coll_products as $product) {          
-
+        foreach ($coll_products as $product) {
             if ($product != null && $product['count'] !== '0'){
                 $image_url = '';
                 if (isset($product['image_id']) && (!empty($product['image_id'])) ){
@@ -36,41 +35,10 @@ class shopFrontendRees46Controller extends waJsonController
                     'name' => $product["name"],
                     'url' =>  $product["frontend_url"] . '?recommended_by=',
                     'price' => (float)($product['price']),
-                    'print_price' => wa_currency($product["price"], $currency),
+                    'print_price' => wa_currency($product["price"], $currency, $format='%{h}'),
                     'image_url' => $image_url
                 );
                 array_push($products, $p);
-
-            // если товар неправильный, или его нет в наличии            
-            } else {
-
-                $app_settings_model = new waAppSettingsModel();                
-                $rees46_shop_id = $app_settings_model->get(array('shop', 'rees46'), 'shop_id');
-                $rees46_secret_key = $app_settings_model->get(array('shop', 'rees46'), 'secret_key');
-
-                // Если есть ключи в настройках отправляем api запрос, чтобы данный товар больше не рекомендовался (для улучшения, не критичный запрос)
-                // если есть curl или включен allow_url_fopen
-                // иначе не отправляем запрос (данные все равно обновяться при просмотре товара)
-                if (!empty($rees46_shop_id) && !empty($rees46_secret_key)) {
-                    $api_url = 'http://api.rees46.com/import/disable';
-                    $api_url .= '?shop_id=' . $rees46_shop_id;
-                    $api_url .= '&shop_secret=' . $rees46_secret_key;
-                    $api_url .= '&item_ids=' . $id;
-
-                    // если allow_url_fopen работает
-                    if (ini_get('allow_url_fopen') == true) {
-                        $result = file_get_contents($api_url);                        
-
-                    // иначе если есть curl
-                    } else if(function_exists('curl_version')){
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, $api_url);
-                        curl_setopt($ch, CURLOPT_HEADER, 0);
-                        $result = curl_exec($ch);
-
-                        curl_close($ch);
-                    }
-                }
             }
         }
 

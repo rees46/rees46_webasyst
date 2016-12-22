@@ -1,287 +1,258 @@
 {if $rees46_shop_id && $rees46_shop_id != ''}
 {literal}
 <script type="text/javascript">
-
-function setREES46() {
-
-  $('.rees46').each(function() {
-    {/literal}
-    {* =============== Display Blocks =================== *}
-      var recommenderBlock = $(this);
-      var recommenderType = recommenderBlock.data('type');
-      var recommenderTitle = recommenderBlock.data('title');
-      var recommenderLimit = recommenderBlock.data('limit');
-      var recommenderBatch = recommenderBlock.data('batch');
-      if (recommenderLimit == null || recommenderLimit == undefined)
-        recommenderLimit = 10;
-
-      var recomend_products_tpl = ''
-      if (recommenderType && recommenderBatch=={$is_batch}) {
-    {literal}
-        REES46.recommend({
-    {/literal}
-          {if !empty($rees46_query)}search_query: '{$rees46_query}',{/if}
-          {if $modification}
-            modification: '{$modification}',
-          {/if}
-    {literal}
-          recommender_type: recommenderType,
-          category: document.currentCategoryId,
-          item: document.currentProductId,
-          cart: document.currentCart,
-          limit: recommenderLimit,
-        }, function(ids) {
-          if (ids.length == 0) {
-            return;
-          }
-
-          {/literal}
-          var baseUrl = "{$wa->getUrl('/frontend/rees46/')}";
-          var shopUrl= "{$wa->getUrl('/frontend')}";
-          var currency = "{$currency}";
-          var default_image = "{$wa_app_static_url}img/image-dummy.png";
-          {literal}
-
-          $.getJSON(shopUrl + '?module=ajax&action=rees46&product_ids=' + ids.join(','), function(response) {
-            var products = response.data;
-
-            var productsBlock = '';
-
-            $(products).each(function() {
-
-              var print_price = this.print_price;
-
-              if (this.image_url == '')
-                this.image_url = default_image;
-
-              if (this.name != '' && this.name != null) {
-                var recommend_url = this.url + recommenderType;
-                recomend_products_tpl += '<div class="recommended-item">' +
-                                          '<div class="recommended-item-photo">' +
-                                            '<a href="' + recommend_url + '"><img src="' + this.image_url + '" class="item_img" /></a>' +
-                                          '</div>' +
-                                          '<div class="recommended-item-title">' +
-                                            '<a href="' + recommend_url + '">' + this.name + '</a>' +
-                                          '</div>' +
-                                          '<div class="recommended-item-price">' +
-                                            print_price +
-                                          '</div>' +
-                                          '<div class="recommended-item-action">' +
-                                            '<a href="' + recommend_url + '">Подробнее</a>'+
-                                          '</div>'+
-                                         '</div>';
-              }
-            });
-
-            var recommender_titles = {
-                interesting: 'Вам это будет интересно',
-                also_bought: 'С этим также покупают',
-                similar: 'Похожие товары',
-                popular: 'Популярные товары',
-                see_also: 'Посмотрите также',
-                recently_viewed: 'Вы недавно смотрели',
-		buying_now: 'Cейчас покупают',
-		search: 'Искавшие это также купили'
+(function() {
+window._r46 = {
+    init: function() {
+        (function(r){
+            window.r46=window.r46||function(){
+                (r46.q=r46.q||[]).push(arguments)
             };
-
-            if (recommenderTitle == null || recommenderTitle == undefined)
-              recommenderTitle = recommender_titles[recommenderType]
-
-            if (recomend_products_tpl != '') {
-              template = '<div class="recommender-block-title">' + recommenderTitle + '</div><div class="recommended-items">' + recomend_products_tpl + '</div>'
-
-              if (REES46.showPromotion) {
-                template = template + REES46.getPromotionBlock();
-              }
-
-              recommenderBlock.html(template);
-            }
-
-          });
-        });
-      }
-    });
-  };
-
-  function initREES46() {
-    $(function () {
-      {/literal}        
-
-        document.is_rees46_init = true;
-
-        {if $wa->userId()}
-          REES46.init('{$rees46_shop_id}', "{$wa->userId()|default:'null'}");
-        {else}
-          REES46.init('{$rees46_shop_id}', null);
-        {/if}
-
-
-        {* =============== Product view =================== *}        
-                
-
+            var s=document.getElementsByTagName(r)[0],rs=document.createElement(r);
+            rs.async=1;
+            rs.src='//cdn.rees46.com/v3.js';
+            s.parentNode.insertBefore(rs,s);
+        })('script');
+{/literal}
+        r46('init', '{$rees46_shop_id}');
+        r46('add_css', 'recommendations'); 
+{literal}
+    }, 
+    tracking: function() {
+ {/literal}
         {if isset($category)}
-          document.currentCategoryId = '{$category.id|escape}';
+        document.currentCategoryId = '{$category.id|escape}';
         {/if}
 
         {if isset($product)}
-          
-          var categories_ids = [];
-          {foreach from=$product.categories item=cat}
-              categories_ids.push({$cat.id})   ;      
-          {/foreach}
-          if (categories_ids.length != 0) 
-            document.categories_ids = categories_ids;
+            var categories_ids = [];
+            {foreach from=$product.categories item=cat}
+            categories_ids.push({$cat.id});      
+            {/foreach}
 
-          
-          document.currentProductId = '{$product.id|escape}';
-          
-          {if $product.status == '1'}
+            if (categories_ids.length != 0) {
+                document.categories_ids = categories_ids;
+            }
+            document.currentProductId = '{$product.id|escape}';
+            {if $product.skus[$product.sku_id]["available"] === '1'}
+
             document.is_available = true;
-          {else}
+            {else}
             document.is_available = false;
-          {/if}
-          document.currentProductPrice = '{$product.price}';
-          document.currentProductName = '{$product.name|escape}';
-          document.currentProductUrl = '{$wa->domainUrl()}{$wa->shop->productUrl($product)}';
-          document.currentProductImage = '{$wa->domainUrl()}{$wa->shop->productImgUrl($product, '970')}';
+            {/if}
+
+            document.currentProductPrice = '{$product.price}';
+            document.currentProductName = '{$product.name|escape}';
+            document.currentProductUrl = '{$wa->domainUrl()}{$wa->shop->productUrl($product)}';
+            document.currentProductImage = '{$wa->domainUrl()}{$wa->shop->productImgUrl($product, '970')}';
         {/if}        
 
-        {* =============== Items in cart =================== *}
         var ids = [];        
-
-
         {foreach $wa->shop->cart->items() as $item}
-          ids.push('{$item.product.id}');
+        ids.push('{$item.product.id}');
         {/foreach}
+
         document.currentCart = ids;
-      {literal}
 
-      REES46.addReadyListener(function() {
-        REES46.addStyleToPage();
-
-        {/literal}
         {if isset($product)}
 
-          REES46.pushData('view', {ldelim}
-            item_id: document.currentProductId,
+        r46('track', 'view', {ldelim}
+            id: document.currentProductId,
             price: document.currentProductPrice,
-            is_available: document.is_available,
+            stock: document.is_available,
             categories: document.categories_ids,
             url: document.currentProductUrl,
             image_url: document.currentProductImage,
             name: document.currentProductName
-          {rdelim});
-
+        {rdelim});
         {/if}
-        {literal}
 
-        {/literal}
-        {* =============== Add / remove to cart || ajax hooks =================== *}        
-        {literal}
+{literal}
 
         $(document).ajaxSend(function(event, jqxhr, settings) {
-          var url = settings.url;
-          var data = settings.data;
+            var url = settings.url;
+            var data = settings.data;
 
-          if (url && data){
-            var arr_data = url.split('?')[0].split('/');
-            var add = false;
-            var remove = false;
-            var cart = false;
-            var item_id = null;
-            var price = null;
-            var categories = null;
-            var is_available = null;
-            var name = null;
-            var item_url = null;
-            var image_url = null;
+            if (url && data){
+                var arr_data = url.split('?')[0].split('/');
+                var add = false;
+                var remove = false;
+                var cart = false;
+                var item_id = null;
+                var price = null;
+                var categories = null;
+                var is_available = null;
+                var name = null;
+                var item_url = null;
+                var image_url = null;
 
-            $.each(arr_data, function(idx, param) {
-              if (param.indexOf("cart") == 0) {
-                cart = true;
-              }
-              if (param.indexOf("add") == 0) {
-                add = true;
-              }
-              if (param.indexOf("delete") == 0) {
-                remove = true;
-              }
+                $.each(arr_data, function(idx, param) {
+                    if (param.indexOf("cart") == 0) {
+                        cart = true;
+                    }
+                    if (param.indexOf("add") == 0) {
+                        add = true;
+                    }
+                    if (param.indexOf("delete") == 0) {
+                        remove = true;
+                    }
+                });
+                var arr_data = data.split('&');
+
+                $.each(arr_data, function(idx, param) {
+                    if (add == true && param.indexOf("product_id") == 0) {
+                        var arr_param = param.split('=');
+                        item_id = arr_param[1];
+                    }
+                    if (remove == true && param.indexOf("id") == 0) {
+                        var arr_param = param.split('=');
+                        var cart_id = arr_param[1];                
+{/literal}
+                        {foreach $wa->shop->cart->items() as $item}
+                        if ({$item.id} == cart_id) item_id = {$item.product_id};
+                        {/foreach}
+{literal}
+                    }
+                });
+
+                if (cart == true && add == true && item_id != null) {
+                    r46('track', 'cart', item_id);
+                };
+
+                if (remove == true && item_id != null) {
+                    r46('track', 'remove_from_cart', item_id);
+                };
+            };
+        });
+
+        if (typeof _r46_order_info != 'undefined') {
+            var order = JSON.parse(_r46_order_info);
+
+            r46('track', 'purchase', {
+                products: order.products,
+                order: order.order,
+                order_price: order.order_price
             });
-            
-            var arr_data = data.split('&');
+            r46('profile', 'set', {"id":order.user.id, "email":order.user.email});
+        }
 
-            $.each(arr_data, function(idx, param) {
-              if (add == true && param.indexOf("product_id") == 0) {
-                var arr_param = param.split('=');
-                item_id = arr_param[1];
-              }
-              if (remove == true && param.indexOf("id") == 0) {
-                var arr_param = param.split('=');
-                var cart_id = arr_param[1];                
+    },
+    recommend: function() {
+        $('.rees46').each(function() {
 
-                {/literal}
-                  {foreach $wa->shop->cart->items() as $item}
-                    if ({$item.id} == cart_id) item_id = {$item.product_id};
-                  {/foreach}
-                {literal}
-              }
-            });
+{/literal}
 
-            // we have product_info in document for this item
-            if (item_id == document.currentProductId) {
-              price  = document.currentProductPrice;
-              categories = [document.currentCategoryId];
-              is_available = document.is_available;
-              item_url = document.currentProductUrl;
-              image_url = document.currentProductImage;
-              name = document.currentProductName;
+            var recommenderBlock = $(this);
+            var recommenderType = recommenderBlock.data('type');
+            var recommenderTitle = recommenderBlock.data('title');
+            var recommenderLimit = recommenderBlock.data('limit');
+            var recommenderBatch = recommenderBlock.data('batch');
+            if (recommenderLimit == null || recommenderLimit == undefined) {
+                recommenderLimit = 10;
             }
+            var recomend_products_tpl = ''
+            if (recommenderType && recommenderBatch=={$is_batch}) {
+                r46('recommend', recommenderType, {ldelim}
+                    {if !empty($rees46_query)}search_query: '{$rees46_query}',{/if}
+                    {if $modification}modification: '{$modification}',{/if}
+                    category: document.currentCategoryId,
+                    item: document.currentProductId,
+                    cart: document.currentCart,
+                    limit: recommenderLimit
+                {rdelim}, function(ids) {
+                    if (ids.length == 0) { return; }
+                    var baseUrl = "{$wa->getUrl('/frontend/rees46/')}";
+                    var shopUrl= "{$wa->getUrl('/frontend')}";
+                    var currency = "{$currency}";
+                    var default_image = "{$wa_app_static_url}img/image-dummy.png";
+{literal}
+                    $.getJSON(shopUrl + '?module=ajax&action=rees46&product_ids=' + ids.join(','), function(response) {
+                        var products = response.data;
+                        var productsBlock = '';
+                        $(products).each(function() {
+                            var print_price = this.print_price;
+                            if (this.image_url == '') {
+                                this.image_url = default_image;
+                            }
+                            if (this.name != '' && this.name != null) {
+                                var recommend_url = this.url + recommenderType;
+                                recomend_products_tpl +=    '<div class="recommended-item">' +
+                                                                '<div class="recommended-item-photo">' +
+                                                                    '<a href="' + recommend_url + '"><img src="' + this.image_url + '" class="item_img" /></a>' +
+                                                                '</div>' +
+                                                                '<div class="recommended-item-title">' +
+                                                                    '<a href="' + recommend_url + '">' + this.name + '</a>' +
+                                                                '</div>' +
+                                                                '<div class="recommended-item-price">' + print_price + '</div>' +
+                                                                '<div class="recommended-item-action">' +
+                                                                    '<a href="' + recommend_url + '">Подробнее</a>'+
+                                                                '</div>'+
+                                                            '</div>';
+                            }
+                        });
+                        var recommender_titles = {
+                            interesting: 'Вам это будет интересно',
+                            also_bought: 'С этим также покупают',
+                            similar: 'Похожие товары',
+                            popular: 'Популярные товары',
+                            see_also: 'Посмотрите также',
+                            recently_viewed: 'Вы недавно смотрели',
+                            buying_now: 'Cейчас покупают',
+                            search: 'Искавшие это также купили'
+                        };
 
-            if (cart == true && add == true && item_id != null) {
+                        if (recommenderTitle == null || recommenderTitle == undefined) {
+                            recommenderTitle = recommender_titles[recommenderType];
+                        }
 
-              REES46.addReadyListener(function() {
-                params = {item_id: item_id}
-                // addition params if available
-                if (price != null) params['price'] = price;
-                if (categories != null) params['categories'] = [categories];
-                if (is_available != null) params['is_available'] = is_available;
-                if (name != null) params['name'] = name;
-                if (item_url != null) params['url'] = item_url;
-
-                REES46.pushData('cart', params);
-              });
-            };
-
-            if (remove == true && item_id != null) {
-
-              REES46.addReadyListener(function() {
-                params = {item_id: item_id}
-                // addition params if available
-                if (price != null) params['price'] = price;
-                if (categories != null) params['categories'] = [categories];
-                if (is_available != null) params['is_available'] = is_available;
-
-                REES46.pushData('remove_from_cart', params);
-              });
-            };
-          };
-        }); // end add to cart
-
-        setREES46();
-
-      }); // end addReadyListener
-
-    }); // end $(function ()
-  }
-
-  
-  var script = document.createElement('script');
-  script.src = '//cdn.rees46.com/rees46_script2.js';
-  script.async = true;
-  script.onload = function() {
-    initREES46();
-  };
-  document.getElementsByTagName('head')[0].appendChild(script);
+                        if (recomend_products_tpl != '') {
+                            template =  '<div class="recommender-block-title">' + recommenderTitle + '</div>' +
+                                        '<div class="recommended-items">' + recomend_products_tpl + '</div>';
+                            recommenderBlock.html(template);
+                        }
+                    });
+                });
+            }
+        });
+    }
+}
+    var initREES46 = function () {
+        var jQueryIsLoaded = setInterval(function() {
+            if (typeof jQuery != 'undefined') {
+                clearInterval(jQueryIsLoaded);
+                window._r46.init();
+                window._r46.tracking();
+                window._r46.recommend();
+            }
+        }, 100);
+    }
+   
+    var isREES46InitializationStarted = false;
+    if ( document.readyState === "complete" ) {
+        isREES46InitializationStarted = true;
+        initREES46();
+    } else if ( document.addEventListener ) {
+        document.addEventListener( "DOMContentLoaded", function(){
+            if(isREES46InitializationStarted == false) {
+                initREES46();
+                isREES46InitializationStarted = true;
+            }
+        });
+        window.addEventListener( "load", function(){
+            if(isREES46InitializationStarted == false) {
+                initREES46();
+                isREES46InitializationStarted = true;
+            }
+        });
+    } else {
+        window.attachEvent( "onload", function(){
+            if(isREES46InitializationStarted == false) {
+                initREES46();
+                isREES46InitializationStarted = true;
+            }
+        });
+    }    
+})();
 </script>
 {/literal}
 {/if}

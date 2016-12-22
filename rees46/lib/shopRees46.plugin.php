@@ -27,12 +27,13 @@ class shopRees46Plugin extends shopPlugin
         $rees46_shop_id = $this->getSettings('shop_id'); 
         $view->assign('rees46_shop_id', $rees46_shop_id);  
 
-        $currency = wa()->getSetting('currency', 'RUB', 'shop');
+        $currency = wa()->getConfig()->getCurrency();
+
         $view->assign('currency', $currency);
 
         $rees46_query = waRequest::get('query');
         $rees46_query = htmlspecialchars($rees46_query);
-	$view->assign('rees46_query', $rees46_query);
+    $view->assign('rees46_query', $rees46_query);
 
         $content = $view->fetch($this->path.'/templates/frontendHead.html');
         return $content;
@@ -44,7 +45,7 @@ class shopRees46Plugin extends shopPlugin
 
     public function frontendSearch()
     {
-        $html = '<div class="rees46 rees46-recommend" data-type="search" data-batch="1" style="margin-top: 20px;"></div>';
+        $html = '<div class="rees46 rees46-recommend" data-type="search" data-batch="1"></div>';
         return $html;    
     }
 
@@ -54,7 +55,7 @@ class shopRees46Plugin extends shopPlugin
     */  
     public function frontendCart()
     {
-        $html = '<div class="rees46 rees46-recommend" data-type="see_also" data-batch="1" style="margin-top: 20px;"></div>';
+        $html = '<div class="rees46 rees46-recommend" data-type="see_also" data-batch="1"></div>';
         return $html;    
     }
 
@@ -64,7 +65,7 @@ class shopRees46Plugin extends shopPlugin
     */  
     public function frontendHomepage()
     { 
-        $html = '<div class="rees46 rees46-recommend" data-type="popular" data-batch="1" style="margin-top: 20px;"></div>';
+        $html = '<div class="rees46 rees46-recommend" data-type="popular" data-batch="1"></div>';
         return $html;    
     }
 
@@ -75,8 +76,8 @@ class shopRees46Plugin extends shopPlugin
 
     public static function frontendCategoryBottom()
     {
-        $html = '<div class="rees46 rees46-recommend" data-type="interesting" data-batch="1" style="margin-top: 20px;"></div>';
-        $html .= '<div class="rees46 rees46-recommend" data-type="recently_viewed" data-batch="1" style="margin-top: 20px;"></div>';
+        $html = '<div class="rees46 rees46-recommend" data-type="interesting" data-batch="1"></div>';
+        $html .= '<div class="rees46 rees46-recommend" data-type="recently_viewed" data-batch="1"></div>';
         return $html;    
     }
 
@@ -86,7 +87,7 @@ class shopRees46Plugin extends shopPlugin
     */ 
     public function frontendCategory($category)
     {
-        $html = '<div class="rees46 rees46-recommend" data-type="popular" data-batch="1" style="margin-top: 20px;"></div>';
+        $html = '<div class="rees46 rees46-recommend" data-type="popular" data-batch="1"></div>';
         // для lazy loading, если скрипт уже был инициализован,
         // то запускаем функцию показа рекомендаций
         $html .= '<script type="text/javascript">';
@@ -104,9 +105,9 @@ class shopRees46Plugin extends shopPlugin
 
     public static function frontendProductBottom()
     {
-        $html = '<div class="rees46 rees46-recommend" data-type="similar" data-batch="1" style="margin-top: 20px;"></div>';
-        $html .= '<div class="rees46 rees46-recommend" data-type="also_bought" data-batch="1" style="margin-top: 20px;"></div>';
-        $html .= '<div class="rees46 rees46-recommend" data-type="interesting" data-batch="1" style="margin-top: 20px;"></div>';
+        $html = '<div class="rees46 rees46-recommend" data-type="similar" data-batch="1"></div>';
+        $html .= '<div class="rees46 rees46-recommend" data-type="also_bought" data-batch="1"></div>';
+        $html .= '<div class="rees46 rees46-recommend" data-type="interesting" data-batch="1"></div>';
         return $html;    
     }
 
@@ -149,7 +150,7 @@ class shopRees46Plugin extends shopPlugin
                 $type = null;
         }
         if ($type) {
-            $html = '<div class="rees46 rees46-recommend" data-type="'.$type.'" data-limit="'.$recommender_data_limit.'"data-batch="0" style="margin-top: 20px;"></div>';
+            $html = '<div class="rees46 rees46-recommend" data-type="'.$type.'" data-limit="'.$recommender_data_limit.'"data-batch="0"></div>';
             return $html;
         }
     }
@@ -157,21 +158,22 @@ class shopRees46Plugin extends shopPlugin
     /**
     * @desc Отслеживаем событие: создание заказа
     */ 
-    public function orderActionCreate($order)
+    public function orderActionCreate($param)
     {     
+        if($param['step'] === 'success') {
+            $order_id = waSystem::getInstance()->getStorage()->get('shop/order_id');
+            $order_model = new shopOrderModel();
+            $order = $order_model->getOrder($order_id);
+            $order_price = 0;
+            $items = $order['items'];
+            $user = $order['contact'];
 
-        $orderItemsModel = new shopOrderItemsModel();
-        $items = $orderItemsModel->getItems($order['order_id']); // получаем список товаров заказа
-
-        foreach ($items as $value) {
-            $rees46_items[] = array('item_id' => $value["product_id"], 'amount' => intval($value["quantity"]), 'price' => $value["price"]);
+            foreach ($items as $item) {
+                $products[] = array('id' => $item["product_id"], 'amount' => intval($item["quantity"]), 'price' => $item["price"]);
+                $order_price += intval($item["price"]);
+            }
+            $html = '<script type="text/javascript">window._r46_order_info=\''.json_encode(array("order" => $order_id, "order_price" => $order_price, "products" => $products, "user" => $user)).'\';</script>';
+            return $html;
         }
-
-        $cookie_data = json_encode(array("items" => $rees46_items, "order_id" => $order['order_id']));
-        setcookie('rees46_track_purchase', $cookie_data, 0, '/'); // save data to cookies, JS will track data from cookies            
-
     }
-
-
-
 }
