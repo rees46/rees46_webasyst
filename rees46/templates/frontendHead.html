@@ -154,7 +154,6 @@ window._r46 = {
             if (recommenderType && recommenderBatch=={$is_batch}) {
                 r46('recommend', recommenderType, {ldelim}
                     {if !empty($rees46_query)}search_query: '{$rees46_query}',{/if}
-                    {if $modification}modification: '{$modification}',{/if}
                     category: document.currentCategoryId,
                     item: document.currentProductId,
                     cart: document.currentCart,

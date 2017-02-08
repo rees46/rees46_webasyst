@@ -3,7 +3,7 @@
 return array(
     'shop_id' => array(
         'title' => 'Код магазина',
-        'description' => 'Код вашего магазина в REES46<br><a href="http://rees46.com/" target="_blank">Зарегистрироваться и получить код прямо сейчас</a><br><br>',
+        'description' => 'Код вашего магазина в REES46<br><a href="http://rees46.com/" target="_blank" style="color:#03c;">Зарегистрироваться и получить код прямо сейчас</a><br><br>',
         'control_type' => waHtmlControl::INPUT,        
     ),
     'secret_key' => array(
@@ -19,63 +19,19 @@ return array(
             array(
                 'value' => 1,
                 'title' => 'Пакетная расстановка блоков рекомендаций',
-                'description' => 'Режим пакетной установки автоматически устанавливает блоки рекомендаций на главную страницу и страницу корзины.<br>Установку дополнительных блоков на страницу категории и страницу карточки товара необходимо выполнить самостоятельно,<br>блоки при этом будут установлены пакетно.<br>',
+                'description' => 'Режим пакетной установки автоматически устанавливает блоки рекомендаций на главную страницу и страницу корзины.<br><a href="http://docs.rees46.com/pages/viewpage.action?pageId=2424930" target="_blank" style="color:#03c;">Подробная документация</a><br>',
             ),
             array(
                 'value' => 0,
                 'title' => 'Самостоятельная расстановка блоков рекомендаций',
-                'description' => 'Режим самостоятельной установки позволяет расставить блоки рекомендаций по собственному усмотрению.<br>Расстановка блоков по рекомендуемой схеме позволяет добиться максимальной эффективности.<br><br>',
+                'description' => 'Режим самостоятельной установки позволяет расставить блоки рекомендаций по собственному усмотрению.<br><a href="http://docs.rees46.com/pages/viewpage.action?pageId=2424930" target="_blank" style="color:#03c;">Подробная документация</a><br><br>',
             ),
         ),
         'value' => 1,
     ),
-    'modification' => array(
-        'title' => 'Модификация алгоритма рекомендаций"',
-        'description' => '<a href="http://rees46.com/" target="_blank">Узнать подробнее про отраслевые модификации</a>',
-        'control_type' => waHtmlControl::SELECT,
-        'options' => array(
-            array(
-                'value' => null,
-                'title' => 'Без модификаций',
-            ),
-            array(
-                'value' => 'appliances',
-                'title' => 'Бытовая техника',
-            ),
-            array(
-                'value' => 'child',
-                'title' => 'Товары для детей',
-            ),
-            array(
-                'value' => 'cosmetic',
-                'title' => 'Косметика',
-            ),
-            array(
-                'value' => 'coupon',
-                'title' => 'Купоны, акции и скидки',
-            ),
-            array(
-                'value' => 'fashion',
-                'title' => 'Одежда и обувь',
-            ),
-            array(
-                'value' => 'construction',
-                'title' => 'Строительные материалы',
-            ),
-            array(
-                'value' => 'animal',
-                'title' => 'Товары для животных',
-            ),
-            array(
-                'value' => 'fmcg',
-                'title' => 'Товары повседневного спроса',
-            ),
-        ),
-        'value' => null,
-    ),
     'is_enabled' => array(
         'title' => 'Статус',
-        'description' => 'Включение выключение модуля рекомендации в вашем магазине.<br><br>',
+        'description' => 'Включение/выключение модуля.<br><br>',
         'control_type' => waHtmlControl::SELECT,
         'options' => array(
             array(
@@ -87,7 +43,8 @@ return array(
                 'title' => 'Выключен',
             ),
         ),
-        'value' => 0,
+        'value' => 1,
     )
 );
 
+                                

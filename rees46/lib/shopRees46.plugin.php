@@ -11,7 +11,6 @@ class shopRees46Plugin extends shopPlugin
     */  
     public function frontendHead()
     {
-
         $status = $this->getSettings('is_enabled');
 
         if (!$status) {return;} // если скрипт в настройках выключен -> выходим
@@ -21,9 +20,6 @@ class shopRees46Plugin extends shopPlugin
         $is_batch = $this->getSettings('is_batch');
         $view->assign('is_batch', $is_batch);
 
-        $modification = $this->getSettings('modification');
-        $view->assign('modification', $modification);  
-        
         $rees46_shop_id = $this->getSettings('shop_id'); 
         $view->assign('rees46_shop_id', $rees46_shop_id);  
 
@@ -33,7 +29,13 @@ class shopRees46Plugin extends shopPlugin
 
         $rees46_query = waRequest::get('query');
         $rees46_query = htmlspecialchars($rees46_query);
-    $view->assign('rees46_query', $rees46_query);
+        $view->assign('rees46_query', $rees46_query);
+
+        $email = wa()->getUser()->get('email', 'default');
+        $id = wa()->getUser()->get('id');
+        $gender = wa()->getUser()->get('sex');
+
+        $view->assign('user_info', '{id: \''.$id.'\', email: \''.$email.'\', gender: \''.$gender.'\'}');
 
         $content = $view->fetch($this->path.'/templates/frontendHead.html');
         return $content;
