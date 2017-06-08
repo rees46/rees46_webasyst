@@ -3,7 +3,7 @@
 /**
 * @desc контроллер плагина рекомендаций REES46
 */
-class shopFrontendRees46Controller extends waJsonController
+class shopRees46PluginFrontendR46getitemsController extends waJsonController
 {    
     /**
     * @desc Возвращаем JSON массив с данными о товарах

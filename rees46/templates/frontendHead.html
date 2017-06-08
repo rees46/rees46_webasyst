@@ -165,7 +165,7 @@ window._r46 = {
                     var currency = "{$currency}";
                     var default_image = "{$wa_app_static_url}img/image-dummy.png";
 {literal}
-                    $.getJSON(shopUrl + '?module=ajax&action=rees46&product_ids=' + ids.join(','), function(response) {
+                    $.getJSON(shopUrl + 'r46getitems/?plugin=rees46&product_ids=' + ids.join(','), function(response) {
                         var products = response.data;
                         var productsBlock = '';
                         $(products).each(function() {
