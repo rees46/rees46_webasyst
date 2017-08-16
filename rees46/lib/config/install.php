@@ -5,7 +5,7 @@ if (wa()->getUser()->isAdmin() && empty(shopRees46Plugin::getSettings('shop_id')
     }
     // Адрес магазина, установившего плагин
     $website = wa()->getRootUrl(true);
-    $url = 'https://rees46.com/trackcms/shopscript';
+    $url = 'https://app.rees46.com/trackcms/shopscript';
     $lead_info = ['website' => $website];
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
