@@ -20,7 +20,7 @@ class shopRees46Plugin extends shopPlugin
         $is_batch = $this->getSettings('is_batch');
         $view->assign('is_batch', $is_batch);
 
-        $rees46_shop_id = $this->getSettings('shop_id'); 
+        $rees46_shop_id = trim($this->getSettings('shop_id'));
         $view->assign('rees46_shop_id', $rees46_shop_id);  
 
         $currency = wa()->getConfig()->getCurrency();
