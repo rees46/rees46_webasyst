@@ -22,6 +22,16 @@ window._r46 = {
  {/literal}
         {if isset($category)}
         document.currentCategoryId = '{$category.id|escape}';
+        if (document.currentCategoryId) {
+            r46('track', 'category', document.currentCategoryId);
+        }
+        {/if}
+
+        {if !empty($rees46_query)}
+        document.search_query = '{$rees46_query}';
+        if (document.search_query) {
+            r46('track', 'search', document.search_query);
+        }
         {/if}
 
         {if isset($product)}
