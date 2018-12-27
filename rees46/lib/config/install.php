@@ -1,5 +1,6 @@
 ﻿<?php
-if (wa()->getUser()->isAdmin() && empty(shopRees46Plugin::getSettings('shop_id'))) {
+$shop_id = shopRees46Plugin::getSettings('shop_id');
+if (wa()->getUser()->isAdmin() && empty($shop_id)) {
     if (!function_exists('curl_init')) {
         return false;
     }

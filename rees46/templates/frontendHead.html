@@ -18,6 +18,11 @@ window._r46 = {
         r46('add_css', 'recommendations'); 
 {literal}
     }, 
+    addInstantSearch: function(){
+        $('form[action*="search"] input[name*="query"]').each(function(k, v) {
+            $(v).addClass('rees46-instant-search');
+        });
+    },
     tracking: function() {
  {/literal}
         {if isset($category)}
@@ -229,6 +234,7 @@ window._r46 = {
         var jQueryIsLoaded = setInterval(function() {
             if (typeof jQuery != 'undefined') {
                 clearInterval(jQueryIsLoaded);
+                window._r46.addInstantSearch();
                 window._r46.init();
                 window._r46.tracking();
                 window._r46.recommend();

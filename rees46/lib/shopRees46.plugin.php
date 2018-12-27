@@ -47,6 +47,9 @@ class shopRees46Plugin extends shopPlugin
 
     public function frontendSearch()
     {
+        $is_batch = $this->getSettings('is_batch');
+        if (!boolval($is_batch)) { return; }
+
         $html = '<div class="rees46 rees46-recommend" data-type="search" data-batch="1"></div>';
         return $html;    
     }
@@ -57,6 +60,9 @@ class shopRees46Plugin extends shopPlugin
     */  
     public function frontendCart()
     {
+        $is_batch = $this->getSettings('is_batch');
+        if (!boolval($is_batch)) { return; }
+
         $html = '<div class="rees46 rees46-recommend" data-type="see_also" data-batch="1"></div>';
         return $html;    
     }
@@ -67,6 +73,9 @@ class shopRees46Plugin extends shopPlugin
     */  
     public function frontendHomepage()
     { 
+        $is_batch = $this->getSettings('is_batch');
+        if (!boolval($is_batch)) { return; }
+
         $html = '<div class="rees46 rees46-recommend" data-type="popular" data-batch="1"></div>';
         return $html;    
     }
@@ -78,6 +87,9 @@ class shopRees46Plugin extends shopPlugin
 
     public static function frontendCategoryBottom()
     {
+        $is_batch = wa('shop')->getPlugin('rees46')->getSettings('is_batch');
+        if (!boolval($is_batch)) { return; }
+
         $html = '<div class="rees46 rees46-recommend" data-type="interesting" data-batch="1"></div>';
         $html .= '<div class="rees46 rees46-recommend" data-type="recently_viewed" data-batch="1"></div>';
         return $html;    
@@ -89,6 +101,9 @@ class shopRees46Plugin extends shopPlugin
     */ 
     public function frontendCategory($category)
     {
+        $is_batch = $this->getSettings('is_batch');
+        if (!boolval($is_batch)) { return; }
+
         $html = '<div class="rees46 rees46-recommend" data-type="popular" data-batch="1"></div>';
         // для lazy loading, если скрипт уже был инициализован,
         // то запускаем функцию показа рекомендаций
@@ -107,6 +122,9 @@ class shopRees46Plugin extends shopPlugin
 
     public static function frontendProductBottom()
     {
+        $is_batch = wa('shop')->getPlugin('rees46')->getSettings('is_batch');
+        if (!boolval($is_batch)) { return; }
+
         $html = '<div class="rees46 rees46-recommend" data-type="similar" data-batch="1"></div>';
         $html .= '<div class="rees46 rees46-recommend" data-type="also_bought" data-batch="1"></div>';
         $html .= '<div class="rees46 rees46-recommend" data-type="interesting" data-batch="1"></div>';
@@ -118,7 +136,10 @@ class shopRees46Plugin extends shopPlugin
     */ 
     public static function REES46_recommender ($recommender_type, $recommender_data_limit)
     {
-    static $type;
+        static $type;
+
+        $is_batch = wa('shop')->getPlugin('rees46')->getSettings('is_batch');
+        if (boolval($is_batch)) { return; }
 
         if (!is_int($recommender_data_limit) || $recommender_data_limit<0 || $recommender_data_limit>10) {$recommender_data_limit=10;};
 
