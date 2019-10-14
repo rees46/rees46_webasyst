@@ -28,8 +28,17 @@ class shopRees46Plugin extends shopPlugin
         $view->assign('currency', $currency);
 
         $rees46_query = waRequest::get('query');
-        $rees46_query = htmlspecialchars($rees46_query);
-        $view->assign('rees46_query', $rees46_query);
+        if (is_null($rees46_query)) {
+            $url = wa()->getRouting()->getCurrentUrl();
+            $url = trim($url, "/");
+            if (preg_match("/search\/.+\/?/", $url)) {
+                $rees46_query = preg_replace("/search\/(.+)\/?/", '$1', $url);
+            }
+        }
+        if (!empty($rees46_query)) {
+            $rees46_query = htmlspecialchars($rees46_query);
+            $view->assign('rees46_query', $rees46_query);
+        }
 
         $email = wa()->getUser()->get('email', 'default');
         $id = wa()->getUser()->get('id');

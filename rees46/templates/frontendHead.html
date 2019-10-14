@@ -15,7 +15,6 @@ window._r46 = {
         })('script');
 {/literal}
         r46('init', '{$rees46_shop_id}');
-        r46('add_css', 'recommendations'); 
 {literal}
     }, 
     addInstantSearch: function(){
@@ -88,11 +87,12 @@ window._r46 = {
             var url = settings.url;
             var data = settings.data;
 
-            if (url && data){
+            if (url && typeof url == "string" && data && typeof data == "string"){
                 var arr_data = url.split('?')[0].split('/');
                 var add = false;
                 var remove = false;
                 var cart = false;
+                var cartFull = false;
                 var item_id = null;
                 var price = null;
                 var categories = null;
@@ -102,40 +102,78 @@ window._r46 = {
                 var image_url = null;
 
                 $.each(arr_data, function(idx, param) {
-                    if (param.indexOf("cart") == 0) {
+                    if (param.indexOf("save") == 0) {
+                        cartFull = true;
+                    }
+                    if (param.indexOf("cart") == 0 && cartFull == false) {
                         cart = true;
                     }
-                    if (param.indexOf("add") == 0) {
+                    if (param.indexOf("add") == 0 && cartFull == false) {
                         add = true;
                     }
-                    if (param.indexOf("delete") == 0) {
+                    if (param.indexOf("delete") == 0 && cartFull == false) {
                         remove = true;
                     }
                 });
-                var arr_data = data.split('&');
 
-                $.each(arr_data, function(idx, param) {
-                    if (add == true && param.indexOf("product_id") == 0) {
-                        var arr_param = param.split('=');
-                        item_id = arr_param[1];
-                    }
-                    if (remove == true && param.indexOf("id") == 0) {
-                        var arr_param = param.split('=');
-                        var cart_id = arr_param[1];                
+                if (cartFull || cart || add || remove) {
+                    var arr_data = data.split('&');
+
+                    $.each(arr_data, function(idx, param) {
+                        if (add == true && param.indexOf("product_id") == 0) {
+                            var arr_param = param.split('=');
+                            item_id = arr_param[1];
+                        }
+                        if (remove == true && param.indexOf("id") == 0) {
+                            var arr_param = param.split('=');
+                            var cart_id = arr_param[1];                
 {/literal}
-                        {foreach $wa->shop->cart->items() as $item}
-                        if ({$item.id} == cart_id) item_id = {$item.product_id};
-                        {/foreach}
+                            {foreach $wa->shop->cart->items() as $item}
+                            if ({$item.id} == cart_id) item_id = {$item.product_id};
+                            {/foreach}
 {literal}
-                    }
-                });
+                        }
+                    });
 
-                if (cart == true && add == true && item_id != null) {
-                    r46('track', 'cart', item_id);
-                };
+                    if (cart == true && add == true && item_id != null) {
+                        r46('track', 'cart', item_id);
+                    };
 
-                if (remove == true && item_id != null) {
-                    r46('track', 'remove_from_cart', item_id);
+                    if (remove == true && item_id != null) {
+                        r46('track', 'remove_from_cart', item_id);
+                    };
+
+                    if (cartFull) {
+                        var items = arr_data.map(function(item) {
+                            return decodeURIComponent(item);
+                        }).filter(function(item) {
+                            return /(sku_id|quantity)/.test(item);
+                        });
+
+                        var countItems = items.filter(function(item) {
+                            return /sku_id/.test(item);
+                        }).length;
+
+                        var params = [];
+                        for (var i = 0; i < countItems; i++) {
+                            var pattern = new RegExp(`items\\[${i}\\]`, 'i');
+                            var currentItem = items.filter(function(item) {
+                                return pattern.test(item);
+                            }).reduce(function(obj, item) {
+                                if (/sku_id/.test(item)) {
+                                    obj.id = item.split('=')[1];
+                                }
+                                if (/quantity/.test(item)) {
+                                    obj.amount = item.split('=')[1];
+                                }
+                                return obj;
+                            }, {});
+                            if (currentItem.id && currentItem.amount && currentItem.amount > 0) {
+                                params.push(currentItem);
+                            };
+                        };
+                        r46("track", "cart", params);
+                    };
                 };
             };
         });
