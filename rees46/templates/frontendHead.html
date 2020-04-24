@@ -4,15 +4,11 @@
 (function() {
 window._r46 = {
     init: function() {
-        (function(r){
-            window.r46=window.r46||function(){
-                (r46.q=r46.q||[]).push(arguments)
-            };
-            var s=document.getElementsByTagName(r)[0],rs=document.createElement(r);
-            rs.async=1;
-            rs.src='//cdn.rees46.com/v3.js';
-            s.parentNode.insertBefore(rs,s);
-        })('script');
+        (function(){
+            window.r46=window.r46||function(){(window.r46.q=window.r46.q||[]).push(arguments)};
+            var c="//cdn.rees46.com",v="/v3.js",s={link:[{href:c,rel:"dns-prefetch"},{href:c,rel:"preconnect"},{href:c+v,rel:"preload",as:"script"}],script:[{src:c+v,async:""}]};
+            Object.keys(s).forEach(function(c){s[c].forEach(function(d){var e=document.createElement(c),a;for(a in d)e.setAttribute(a,d[a]);document.head.appendChild(e)})});
+        })();
 {/literal}
         r46('init', '{$rees46_shop_id}');
 {literal}
@@ -189,83 +185,6 @@ window._r46 = {
             r46('profile', 'set', {"id":order.user.id, "email":order.user.email});
         }
 
-    },
-    recommend: function() {
-        $('.rees46').each(function() {
-
-{/literal}
-
-            var recommenderBlock = $(this);
-            var recommenderType = recommenderBlock.data('type');
-            var recommenderTitle = recommenderBlock.data('title');
-            var recommenderLimit = recommenderBlock.data('limit');
-            var recommenderBatch = recommenderBlock.data('batch');
-            if (recommenderLimit == null || recommenderLimit == undefined) {
-                recommenderLimit = 10;
-            }
-            var recomend_products_tpl = ''
-            if (recommenderType && recommenderBatch=={$is_batch}) {
-                r46('recommend', recommenderType, {ldelim}
-                    {if !empty($rees46_query)}search_query: '{$rees46_query}',{/if}
-                    category: document.currentCategoryId,
-                    item: document.currentProductId,
-                    cart: document.currentCart,
-                    limit: recommenderLimit
-                {rdelim}, function(ids) {
-                    if (ids.length == 0) { return; }
-                    var baseUrl = "{$wa->getUrl('/frontend/rees46/')}";
-                    var shopUrl= "{$wa->getUrl('/frontend')}";
-                    var currency = "{$currency}";
-                    var default_image = "{$wa_app_static_url}img/image-dummy.png";
-{literal}
-                    $.getJSON(shopUrl + 'r46getitems/?plugin=rees46&product_ids=' + ids.join(','), function(response) {
-                        var products = response.data;
-                        var productsBlock = '';
-                        $(products).each(function() {
-                            var print_price = this.print_price;
-                            if (this.image_url == '') {
-                                this.image_url = default_image;
-                            }
-                            if (this.name != '' && this.name != null) {
-                                var recommend_url = this.url + recommenderType;
-                                recomend_products_tpl +=    '<div class="recommended-item">' +
-                                                                '<div class="recommended-item-photo">' +
-                                                                    '<a href="' + recommend_url + '"><img src="' + this.image_url + '" class="item_img" /></a>' +
-                                                                '</div>' +
-                                                                '<div class="recommended-item-title">' +
-                                                                    '<a href="' + recommend_url + '">' + this.name + '</a>' +
-                                                                '</div>' +
-                                                                '<div class="recommended-item-price">' + print_price + '</div>' +
-                                                                '<div class="recommended-item-action">' +
-                                                                    '<a href="' + recommend_url + '">Подробнее</a>'+
-                                                                '</div>'+
-                                                            '</div>';
-                            }
-                        });
-                        var recommender_titles = {
-                            interesting: 'Вам это будет интересно',
-                            also_bought: 'С этим также покупают',
-                            similar: 'Похожие товары',
-                            popular: 'Популярные товары',
-                            see_also: 'Посмотрите также',
-                            recently_viewed: 'Вы недавно смотрели',
-                            buying_now: 'Cейчас покупают',
-                            search: 'Искавшие это также купили'
-                        };
-
-                        if (recommenderTitle == null || recommenderTitle == undefined) {
-                            recommenderTitle = recommender_titles[recommenderType];
-                        }
-
-                        if (recomend_products_tpl != '') {
-                            template =  '<div class="recommender-block-title">' + recommenderTitle + '</div>' +
-                                        '<div class="recommended-items">' + recomend_products_tpl + '</div>';
-                            recommenderBlock.html(template);
-                        }
-                    });
-                });
-            }
-        });
     }
 };
     var initREES46 = function () {
@@ -275,7 +194,6 @@ window._r46 = {
                 window._r46.addInstantSearch();
                 window._r46.init();
                 window._r46.tracking();
-                window._r46.recommend();
             }
         }, 100);
     }

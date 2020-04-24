@@ -11,27 +11,9 @@ return array(
         'description' => 'Секретный ключ вашего магазина в REES46<br><br>',
         'control_type' => waHtmlControl::INPUT,        
     ),
-    'is_batch' => array(
-        'title' => 'Способ расстановки блоков рекомендаций',
-        'description' => '',
-        'control_type' => waHtmlControl::RADIOGROUP,
-        'options' => array(
-            array(
-                'value' => 1,
-                'title' => 'Пакетная расстановка блоков рекомендаций',
-                'description' => 'Режим пакетной установки автоматически устанавливает блоки рекомендаций на главную страницу и страницу корзины.<br><a href="http://docs.rees46.com/pages/viewpage.action?pageId=2424930" target="_blank" style="color:#03c;">Подробная документация</a><br>',
-            ),
-            array(
-                'value' => 0,
-                'title' => 'Самостоятельная расстановка блоков рекомендаций',
-                'description' => 'Режим самостоятельной установки позволяет расставить блоки рекомендаций по собственному усмотрению.<br><a href="http://docs.rees46.com/pages/viewpage.action?pageId=2424930" target="_blank" style="color:#03c;">Подробная документация</a><br><br>',
-            ),
-        ),
-        'value' => 1,
-    ),
     'is_enabled' => array(
         'title' => 'Статус',
-        'description' => 'Включение/выключение модуля.<br><br>',
+        'description' => 'Включение/выключение модуля.<br>Воспользуйтесь <a href="http://docs.rees46.com/pages/viewpage.action?pageId=2424930" target="_blank" style="color:#03c;">документацией</a> для завершения интеграции и настройки сервиса<br><br>',
         'control_type' => waHtmlControl::SELECT,
         'options' => array(
             array(
